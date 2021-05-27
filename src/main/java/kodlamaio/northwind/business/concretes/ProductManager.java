@@ -8,8 +8,10 @@ import kodlamaio.northwind.core.utilities.results.SuccessResult;
 import kodlamaio.northwind.dataAccess.abstracts.ProductDao;
 import kodlamaio.northwind.entities.concretes.Product;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
@@ -28,6 +30,18 @@ public class ProductManager implements ProductService {
     }
 
     @Override
+    public DataResult<List<Product>> getAllSorted() {
+        Sort sort = Sort.by(Sort.Direction.ASC, "productName");
+        return new SuccessDataResult<List<Product>>(productDao.findAll(sort), "Data Listelendi..");
+    }
+
+    @Override
+    public DataResult<List<Product>> getAll(final int pageNo, final int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+        return new SuccessDataResult<List<Product>>(productDao.findAll(pageable).getContent());
+    }
+
+    @Override
     public Result add(final Product product) {
         productDao.save(product);
         return new SuccessResult("Ürün Eklemdi");
@@ -40,17 +54,17 @@ public class ProductManager implements ProductService {
 
     @Override
     public DataResult<Product> getByProductNameAndCategory(final String productName, final int categoryId) {
-        return new SuccessDataResult<Product>(productDao.getByProductNameAndCategory(productName, categoryId), "Data Listelendi..");
+        return new SuccessDataResult<Product>(productDao.getByProductNameAndCategory_CategoryId(productName, categoryId), "Data Listelendi..");
     }
 
     @Override
     public DataResult<List<Product>> getByProductNameOrCategory(final String productName, final int categoryId) {
-        return new SuccessDataResult<List<Product>>(productDao.getByProductNameOrCategory(productName, categoryId), "Data Listelendi..");
+        return new SuccessDataResult<List<Product>>(productDao.getByProductNameOrCategory_CategoryId(productName, categoryId), "Data Listelendi..");
     }
 
     @Override
     public DataResult<List<Product>> getByCategoryIn(final List<Integer> categories) {
-        return new SuccessDataResult<List<Product>>(productDao.getByCategoryIn(categories), "Data Listelendi..");
+        return new SuccessDataResult<List<Product>>(productDao.getByCategory_CategoryIdIn(categories), "Data Listelendi..");
     }
 
     @Override
@@ -65,7 +79,7 @@ public class ProductManager implements ProductService {
 
     @Override
     public DataResult<List<Product>> getByNameAndCategory(final String productName, final int categoryId) {
-        return new SuccessDataResult<List<Product>>(productDao.getByNameAndCategory(productName, categoryId), "Data Listelendi..");
+        return new SuccessDataResult<List<Product>>(productDao.getByNameAndCategory_CategoryId(productName, categoryId), "Data Listelendi..");
     }
 
 }

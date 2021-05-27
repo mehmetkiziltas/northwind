@@ -22,7 +22,7 @@ public class ProductsController {
 
     @GetMapping("/getall")
     public DataResult<List<Product>> getAll() {
-        return  productService.getAll();
+        return productService.getAll();
     }
 
     @PostMapping("/add")
@@ -30,8 +30,29 @@ public class ProductsController {
         return productService.add(product);
     }
 
-    @GetMapping("getByProductName")
-    public DataResult<Product> getByProductName(@RequestParam String productName){
+    @GetMapping("/getByProductName")
+    public DataResult<Product> getByProductName(@RequestParam String productName) {
         return productService.getByProductName(productName);
     }
+
+    @GetMapping("/getByProductNameAndCategoryId")
+    public DataResult<Product> getByProductNameAndCategory(@RequestParam("productName") String productName, @RequestParam("categoryId") int categoryId) {
+        return productService.getByProductNameAndCategory(productName, categoryId);
+    }
+
+    @GetMapping("/getByProductNameContains")
+    public DataResult<List<Product>> getByProductNameContains(@RequestParam String productName) {
+        return productService.getByProductNameContains(productName);
+    }
+
+    @GetMapping("/getAllByPage")
+    DataResult<List<Product>> getAll(final int pageNo, final int pageSize) {
+        return productService.getAll(pageNo, pageSize);
+    }
+
+    @GetMapping("/getAllAsc")
+    public DataResult<List<Product>> getAllSorted(){
+        return productService.getAllSorted();
+    }
+
 }
