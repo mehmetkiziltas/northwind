@@ -13,7 +13,7 @@ import java.util.List;
 @RequestMapping("/api/v1/products")
 public class ProductsController {
 
-    private ProductService productService;
+    private final ProductService productService;
 
     @Autowired
     public ProductsController(final ProductService productService) {
@@ -28,5 +28,10 @@ public class ProductsController {
     @PostMapping("/add")
     public Result add(@RequestBody Product product) {
         return productService.add(product);
+    }
+
+    @GetMapping("getByProductName")
+    public DataResult<Product> getByProductName(@RequestParam String productName){
+        return productService.getByProductName(productName);
     }
 }
